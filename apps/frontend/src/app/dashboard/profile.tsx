@@ -71,6 +71,28 @@ export default function Index() {
             </Text>
           </View>
         </View>
+
+        {/* Daily Streak Widget */}
+        <View className="mt-6 px-4">
+          {/* Header Strip */}
+          <View className="flex-row items-center justify-between">
+            {/* Left side - Fire emoji and streak text */}
+            <View className="flex-row items-center">
+              <Text className="text-lg">🔥</Text>
+              <Text className="ml-2 text-base font-medium">5-day streak!</Text>
+            </View>
+            
+            {/* Right side - Info icon with same margin as settings gear */}
+            <View className="mr-4">
+              <AntDesign 
+                name="infocirlceo" 
+                size={16} 
+                color="white"
+                style={{ opacity: 0.6 }}
+              />
+            </View>
+          </View>
+        </View>
         
         {/* Clean canvas with black background - ready for new layout */}
       </View>
