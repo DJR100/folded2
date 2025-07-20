@@ -26,6 +26,31 @@ export default function Index() {
             />
           </View>
         </View>
+
+        {/* Profile Picture & Username Block */}
+        <View className="items-center mt-16">
+          {/* Circular Profile Picture Placeholder */}
+          <View 
+            className="w-[120px] h-[120px] rounded-full border-2 border-gray-400 mb-4"
+            style={{ 
+              borderColor: '#9CA3AF', // medium grey
+              backgroundColor: 'transparent' 
+            }}
+          />
+          
+          {/* Username with Edit Icon */}
+          <View className="flex-row items-baseline">
+            <Text className="text-lg font-semibold">Username</Text>
+            <View className="ml-1" style={{ marginLeft: 4 }}>
+              <AntDesign 
+                name="edit" 
+                size={16} 
+                color="white"
+                style={{ opacity: 0.4 }}
+              />
+            </View>
+          </View>
+        </View>
         
         {/* Clean canvas with black background - ready for new layout */}
       </View>
