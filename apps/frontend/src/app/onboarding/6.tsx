@@ -40,12 +40,11 @@ export default function Onboarding() {
             Folded is community based. We rely on peer support.
           </Text>
           <Text variant="p">
-            The first step to joining this community is to buy somebody else
-            their 7 day streak Guardian.
+            The first step to joining this community is to take a 7-day bet on
+            yourself, with us cheering you on.
           </Text>
-          <Text variant="p" muted>
-            Who's Gaurdian will you buy? After you buy their gift, you can start
-            a chat with them. They will be your first friend in the community.
+          <Text variant="p">
+          Imagine looking back in seven days and seeing real progress. Let’s make that happen together.
           </Text>
 
           <View className="flex flex-col gap-4 mt-4">
