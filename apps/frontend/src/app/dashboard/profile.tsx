@@ -92,6 +92,92 @@ export default function Index() {
               />
             </View>
           </View>
+
+          {/* Day-by-Day Tracker Row */}
+          <View className="mt-4">
+            <View className="relative">
+              {/* Day Labels Row */}
+              <View className="flex-row justify-between mb-2">
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>M</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>TU</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>W</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>TH</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#F97316' }}>F</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>SA</Text>
+                <Text className="text-xs text-center w-6" style={{ color: '#9CA3AF' }}>SU</Text>
+              </View>
+
+              {/* Circles Row with Progress Rail */}
+              <View className="relative">
+                {/* Progress Rail - symmetric line extending equally on both sides */}
+                <View 
+                  className="absolute"
+                  style={{ 
+                    height: 1, 
+                    backgroundColor: '#9CA3AF',
+                    top: 11, // Center of 24px circles (12px from top)
+                    left: -12, // Extend left by half circle width
+                    right: -12, // Extend right by half circle width
+                  }}
+                />
+
+                {/* Seven Day Circles - perfectly aligned under labels */}
+                <View className="flex-row justify-between">
+                  {/* Monday */}
+                  <View 
+                    className="w-6 h-6 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#3DF08B' }}
+                  >
+                    <AntDesign name="check" size={12} color="white" />
+                  </View>
+
+                  {/* Tuesday */}
+                  <View 
+                    className="w-6 h-6 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#3DF08B' }}
+                  >
+                    <AntDesign name="check" size={12} color="white" />
+                  </View>
+
+                  {/* Wednesday */}
+                  <View 
+                    className="w-6 h-6 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#3DF08B' }}
+                  >
+                    <AntDesign name="check" size={12} color="white" />
+                  </View>
+
+                  {/* Thursday */}
+                  <View 
+                    className="w-6 h-6 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#3DF08B' }}
+                  >
+                    <AntDesign name="check" size={12} color="white" />
+                  </View>
+
+                  {/* Friday - Current Day */}
+                  <View 
+                    className="w-6 h-6 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#3DF08B' }}
+                  >
+                    <AntDesign name="check" size={12} color="white" />
+                  </View>
+
+                  {/* Saturday */}
+                  <View 
+                    className="w-6 h-6 rounded-full"
+                    style={{ backgroundColor: '#4B5563' }}
+                  />
+
+                  {/* Sunday */}
+                  <View 
+                    className="w-6 h-6 rounded-full"
+                    style={{ backgroundColor: '#4B5563' }}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
         </View>
         
         {/* Clean canvas with black background - ready for new layout */}
