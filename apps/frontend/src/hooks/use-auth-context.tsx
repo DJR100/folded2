@@ -31,8 +31,9 @@ interface AuthContext {
   setPostOnboarding: React.Dispatch<
     React.SetStateAction<0 | 1 | 2 | 3 | "DONE">
   >;
-  bankConnected: boolean;
-  setBankConnected: React.Dispatch<React.SetStateAction<boolean>>;
+  // COMMENTED OUT FOR V1 - Bank connection not required
+  // bankConnected: boolean;
+  // setBankConnected: React.Dispatch<React.SetStateAction<boolean>>;
   updateUser: (dotkey: string, value: any) => Promise<void>;
 }
 
@@ -41,12 +42,11 @@ const AuthContext = createContext<AuthContext>({} as AuthContext);
 export function AuthContextProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>();
 
-  // TODO: Init onboarded and tier state from the database
+  // Local state variables - these will be synced with database state
   const [onboarding, setOnboarding] = useState<number | "DONE">(0);
-  const [postOnboarding, setPostOnboarding] = useState<0 | 1 | 2 | 3 | "DONE">(
-    0,
-  );
-  const [bankConnected, setBankConnected] = useState<boolean>(false);
+  const [postOnboarding, setPostOnboarding] = useState<0 | 1 | 2 | 3 | "DONE">(0);
+  // COMMENTED OUT FOR V1 - Bank connection not required
+  // const [bankConnected, setBankConnected] = useState<boolean>(false);
 
   const signUp = async (email: string, password: string) => {
     try {
@@ -74,13 +74,15 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
       setUser(null);
       setOnboarding(0);
       setPostOnboarding(0);
-      setBankConnected(false);
+      // COMMENTED OUT FOR V1
+      // setBankConnected(false);
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
 
+  // Initial user loading - this handles the first-time user fetch
   useEffect(() => {
     const readUser = async () => {
       if (!auth.currentUser?.uid) return;
@@ -91,9 +93,7 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
 
       return user;
     };
-    // auth.authStateReady().then(async () => {
-    //   setUser(await readUser());
-    // });
+
     const unsubscribeAuthState = auth.onAuthStateChanged(async () => {
       setUser(await readUser());
     });
@@ -103,29 +103,67 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     };
   }, []);
 
+  // ✅ THIS IS THE KEY CHANGE - Sync local state with database state
   useEffect(() => {
     if (!user) return;
 
+    console.log("🔄 Syncing local state with database state...");
+    console.log("User tier from database:", user.tier);
+
+    // ✅ STEP 1: Initialize onboarding state based on user's tier from database
+    if (user.tier === 0) {
+      // User hasn't completed onboarding yet
+      console.log("Setting onboarding state to 0 (not complete)");
+      setOnboarding(0);
+      setPostOnboarding(0);
+    } else {
+      // User has completed onboarding (tier > 0)
+      console.log("Setting onboarding state to DONE (complete)");
+      setOnboarding("DONE");
+      setPostOnboarding("DONE");
+    }
+
+    // ✅ STEP 2: Initialize bank connection state (COMMENTED OUT FOR V1)
+    // const hasBankConnection = !!user.banking?.accessToken;
+    // console.log("Bank connection status from database:", hasBankConnection);
+    // setBankConnected(hasBankConnection);
+
+    // ✅ STEP 3: Set up real-time listener for ongoing updates
     const snapshotListener = onSnapshot(
       doc(db, "users", auth.currentUser?.uid ?? ""),
       (doc) => {
-        const user = doc.data() as User | undefined;
-        if (!user) return;
-        setUser(user);
+        const updatedUser = doc.data() as User | undefined;
+        if (!updatedUser) return;
+        
+        console.log("📡 Real-time user update received");
+        setUser(updatedUser);
+        
+        // Update local state when database changes in real-time
+        if (updatedUser.tier === 0) {
+          setOnboarding(0);
+          setPostOnboarding(0);
+        } else {
+          setOnboarding("DONE");
+          setPostOnboarding("DONE");
+        }
+        
+        // COMMENTED OUT FOR V1
+        // setBankConnected(!!updatedUser.banking?.accessToken);
       },
     );
+    
     return () => {
       snapshotListener();
     };
-  }, [!!user]);
+  }, [user?.uid]); // ✅ Watch user.uid to avoid infinite loops
 
   const updateUser = async (dotkey: string, value: any) => {
-    // dotkey is like "demographic.age"
+    // dotkey is like "demographic.age" or "tier"
     if (!user) return;
 
     const keys = dotkey.split(".");
     const newUser = _.cloneDeep(user);
-    let current = newUser; // Use newUser instead of making a second clone
+    let current = newUser;
     for (let i = 0; i < keys.length - 1; i++) {
       const k = keys[i] as keyof typeof current;
       if (!current[k]) {
@@ -153,8 +191,9 @@ export function AuthContextProvider({ children }: PropsWithChildren) {
     setOnboarding,
     postOnboarding,
     setPostOnboarding,
-    bankConnected,
-    setBankConnected,
+    // COMMENTED OUT FOR V1
+    // bankConnected,
+    // setBankConnected,
     updateUser,
   };
   return <AuthContext value={value}>{children}</AuthContext>;
