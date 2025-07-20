@@ -51,6 +51,26 @@ export default function Index() {
             </View>
           </View>
         </View>
+
+        {/* Primary Action Button */}
+        <View className="mt-6 px-4">
+          <View 
+            className="w-full rounded-lg flex-row items-center justify-center"
+            style={{ 
+              height: 48, // 48px on phones, could be responsive
+              backgroundColor: '#3DF08B', // Folded's signature green
+              opacity: 0.8,
+              pointerEvents: 'none'
+            }}
+          >
+            <Text 
+              className="font-medium" 
+              style={{ color: 'white' }}
+            >
+              Start Daily Challenge
+            </Text>
+          </View>
+        </View>
         
         {/* Clean canvas with black background - ready for new layout */}
       </View>
