@@ -5,16 +5,18 @@ import { Text } from "@/components/ui";
 import { useAuthContext } from "@/hooks/use-auth-context";
 
 export default function Onboarding() {
-  const { setPostOnboarding } = useAuthContext();
+  const { setPostOnboarding, updateUser } = useAuthContext();
 
   return (
     <OnboardingLayout
       title="Thanks for joining"
       button={{
         text: "Go to dashboard",
-        onPress: () => {
-          router.push("/dashboard");
+        onPress: async () => {
+          // ✅ CRITICAL FIX: Update tier in database to mark onboarding complete
+          await updateUser("tier", 1);
           setPostOnboarding("DONE");
+          router.push("/dashboard");
         },
       }}
     >
