@@ -79,7 +79,7 @@ export default function Index() {
         <View className="flex flex-col gap-8 items-center py-8">
           {/* TODO: replace with animated blob, or picture of face or something more interesting */}
           <View className="w-1/2 aspect-square bg-accent rounded-full items-center ">
-            <Text className="text-4xl mt-[40px]">👀</Text>
+            <Text className="text-4xl mt-[40px]">❤️</Text>
           </View>
 
           <View className="flex flex-col gap-2 items-center">

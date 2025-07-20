@@ -82,14 +82,10 @@ export default function Onboarding() {
             <Text variant="h2" className="text-center">
               Support Joe
             </Text>
-            <View className="flex flex-row gap-4 h-40">
+            <View className="flex justify-center items-center h-40">
               <Image
                 source={require("@/assets/images/faces/face-0.jpg")}
-                style={{ aspectRatio: 1, height: "100%", borderRadius: 70 }}
-              />
-              <Guardian
-                src={require("@/assets/images/guardians/guardian-0.png")}
-                selected={true}
+                style={{ aspectRatio: 1, height: 100, borderRadius: 70 }}
               />
             </View>
             <Text variant="p" className="text-center">
