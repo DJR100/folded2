@@ -17,7 +17,7 @@ export default function Index() {
           <Text className="text-lg font-medium">Folded.</Text>
           
           {/* Settings Gear - Right aligned with margin */}
-          <View className="mr-4">
+          <View style={{ marginRight: 6 }}>
             <AntDesign 
               name="setting" 
               size={24} 
@@ -82,8 +82,8 @@ export default function Index() {
               <Text className="ml-2 text-base font-medium">5-day streak!</Text>
             </View>
             
-            {/* Right side - Info icon with same margin as settings gear */}
-            <View className="mr-4">
+            {/* Right side - Info icon aligned with Sunday label center */}
+            <View style={{ marginRight: 4 }}>
               <AntDesign 
                 name="infocirlceo" 
                 size={16} 
