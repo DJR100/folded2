@@ -1,10 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal, TouchableOpacity, Alert } from "react-native";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { DashboardLayout } from "@/components/layouts/dashboard";
-import { Text, View } from "@/components/ui";
+import { Text, View, Button } from "@/components/ui";
 
 export default function Index() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+
+  const openModal = () => setIsModalVisible(true);
+  const closeModal = () => {
+    setIsModalVisible(false);
+    // Reset selected image when closing
+    setSelectedImageUri(null);
+  };
+
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permissions needed',
+        'Please grant photo library permissions to select a profile picture.'
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const pickImage = async () => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1], // Square aspect ratio
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        console.log('🖼️ Image selected:', result.assets[0].uri);
+        setSelectedImageUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Failed to pick image');
+    }
+  };
+
+  const handleSave = () => {
+    // For now, just log and close
+    console.log('💾 Saving profile with image:', selectedImageUri);
+    Alert.alert('Success', 'Profile updated successfully!', [
+      { text: 'OK', onPress: closeModal }
+    ]);
+  };
+
   return (
     <DashboardLayout>
       <View>
@@ -40,15 +97,15 @@ export default function Index() {
           
           {/* Username with Edit Icon */}
           <View className="flex-row items-baseline">
-            <Text className="text-lg font-semibold">Username</Text>
-            <View className="ml-1" style={{ marginLeft: 4 }}>
+            <Text className="text-lg font-semibold">Dillon</Text>
+            <TouchableOpacity onPress={openModal} style={{ marginLeft: 4 }}>
               <AntDesign 
                 name="edit" 
                 size={16} 
                 color="white"
                 style={{ opacity: 0.4 }}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -179,9 +236,92 @@ export default function Index() {
             </View>
           </View>
         </View>
-        
-        {/* Clean canvas with black background - ready for new layout */}
       </View>
+
+      {/* Profile Edit Modal */}
+      <Modal
+        visible={isModalVisible}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
+        {/* Semi-transparent backdrop - tap to dismiss */}
+        <TouchableOpacity 
+          style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+          activeOpacity={1}
+          onPress={closeModal}
+        >
+          {/* Centered card */}
+          <View className="flex-1 justify-center items-center px-6">
+            <TouchableOpacity 
+              activeOpacity={1}
+              onPress={() => {}} // Prevent card tap from closing modal
+              className="bg-background rounded-2xl p-6 w-full max-w-sm"
+              style={{ backgroundColor: '#1a1a1a' }}
+            >
+              {/* Large circular avatar */}
+              <View className="items-center mb-6">
+                <View 
+                  className="w-32 h-32 rounded-full border-2 mb-4 overflow-hidden"
+                  style={{ 
+                    borderColor: '#9CA3AF',
+                    backgroundColor: 'transparent' 
+                  }}
+                >
+                  {selectedImageUri ? (
+                    <Image
+                      source={{ uri: selectedImageUri }}
+                      style={{ width: '100%', height: '100%' }}
+                      contentFit="cover"
+                    />
+                  ) : null}
+                </View>
+                
+                {/* Username with edit icon (inactive) */}
+                <View className="flex-row items-baseline">
+                  <Text className="text-xl font-semibold text-white">Dillon</Text>
+                  <View style={{ marginLeft: 6 }}>
+                    <AntDesign 
+                      name="edit" 
+                      size={16} 
+                      color="white"
+                      style={{ opacity: 0.4 }}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              {/* Two circular icon buttons */}
+              <View className="flex-row justify-center gap-6 mb-8">
+                {/* Photo Library Button */}
+                <TouchableOpacity 
+                  className="w-16 h-16 rounded-full bg-gray-700 items-center justify-center"
+                  style={{ backgroundColor: '#374151' }}
+                  onPress={pickImage}
+                >
+                  <MaterialIcons name="photo-library" size={24} color="white" />
+                </TouchableOpacity>
+
+                {/* Camera Button */}
+                <TouchableOpacity 
+                  className="w-16 h-16 rounded-full bg-gray-700 items-center justify-center"
+                  style={{ backgroundColor: '#374151' }}
+                  onPress={() => {}} // Inactive for now
+                >
+                  <MaterialIcons name="camera-alt" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Close/Save button */}
+              <Button
+                text={selectedImageUri ? "Save" : "Close"}
+                variant="secondary"
+                onPress={selectedImageUri ? handleSave : closeModal}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </DashboardLayout>
   );
 }
